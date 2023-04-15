@@ -1,90 +1,131 @@
+import cv2
+import torch
+from PIL import Image
+import torch.nn.functional as F
+from torchvision import transforms
+from models.models import create_model
+from options.test_options import TestOptions
+from insightface_func.face_detect_crop_multi import Face_detect_crop
+from util.videoswap_multispecific import video_swap
 import os
-import uvicorn
-from fastapi import FastAPI, File, UploadFile
-import shutil
-from pathlib import Path
-from fastapi.staticfiles import StaticFiles
-from werkzeug.utils import secure_filename
-from starlette.responses import RedirectResponse, FileResponse
-
-UPLOAD_FOLDER = "storage/uploads/"
-DOWNLOAD_FOLDER = "storage/downloads/"
-SRC_FOLDER = "src/"
-DST_FOLDER = "dst/"
-ALLOWED_EXTENSIONS = {".mp4"}
-
-app = FastAPI()
-
-app.mount("/storage/uploads", StaticFiles(directory="storage/uploads"), name="storage/uploads")
-app.mount("/storage/downloads", StaticFiles(directory="storage/downloads"), name="storage/downloads")
-app.mount("/storage/test_data", StaticFiles(directory="storage/test_data"), name="storage/test_data")
+import glob
 
 
-@app.get("/")
-async def docs_redirect():
-    """Launches start page. Just redirects to API documentation."""
-    return RedirectResponse(url="/docs")
+def init_options(multispecific_dir, video_path, output_path):
+    opt = TestOptions()
+    opt.initialize()
+    opt.gpu_ids = -1
+    opt.parser.add_argument('-f')
+    opt = opt.parse()
+    opt.multisepcific_dir = multispecific_dir
+    opt.video_path = video_path
+    opt.output_path = output_path
+    opt.temp_path = './tmp'
+    opt.Arc_path = './arcface_model/arcface_checkpoint.tar'
+    opt.isTrain = False
+    opt.no_simswaplogo = True
+    opt.name = 'people'
+    opt.use_mask = True
+    return opt
 
 
-@app.post("/upload_src")
-async def upload_src_video(uploaded_file: UploadFile = File(...)):
-    """Uploads source video uploaded_file to the server UPLOAD_FOLDER/SRC_FOLDER using form data."""
-    try:
-        destination_path = f"{UPLOAD_FOLDER}{SRC_FOLDER}"
-        return await upload_to_folder(uploaded_file, destination_path)
-    except Exception as e:
-        return {"message": f"There was an error uploading the file:{str(e)}"}
-    finally:
-        uploaded_file.file.close()
+def init_model(opt):
+    torch.nn.Module.dump_patches = True
+    model = create_model(opt)
+    model.eval()
+    return model
 
 
-@app.post("/upload_dst")
-async def upload_dst_video(uploaded_file: UploadFile = File(...)):
-    """Uploads destination video uploaded_file to the server UPLOAD_FOLDER/DST_FOLDER using form data."""
-    try:
-        destination_path = f"{UPLOAD_FOLDER}{DST_FOLDER}"
-        return await upload_to_folder(uploaded_file, destination_path)
-    except Exception as e:
-        return {"message": f"There was an error uploading the file:{str(e)}"}
-    finally:
-        uploaded_file.file.close()
-    return {"message": f"Successfully uploaded {uploaded_file.filename}"}
+def init_face_detection_model(size):
+    app = Face_detect_crop(name='antelope', root='./insightface_func/models')
+    app.prepare(ctx_id=0, det_thresh=0.6, det_size=(size, size))
+    return app
 
 
-@app.get("/process_videos/")
-async def process_videos(src_video: str = '', dst_video: str = ''):
-    return print(f"Source video: {src_video}, destination video: {dst_video}")
+def prepare_source_persons(model, app, transformer_arcface, multisepcific_dir, crop_size):
+    # The specific person to be swapped(source)
+    source_specific_id_nonorm_list = []
+    source_path = os.path.join(multisepcific_dir, 'SRC_*')
+    source_specific_images_path = sorted(glob.glob(source_path))
 
+    with torch.no_grad():
+        for source_specific_image_path in source_specific_images_path:
+            print(source_specific_image_path)
+            if os.path.isfile(source_specific_image_path):
+                print(f"file {source_specific_image_path} found")
+            else:
+                print(f"file {source_specific_image_path} not found")
+            specific_person_whole = cv2.imread(source_specific_image_path)
+            specific_person_align_crop, _ = app.get(specific_person_whole, crop_size)
+            specific_person_align_crop_pil = Image.fromarray(
+                cv2.cvtColor(specific_person_align_crop[0], cv2.COLOR_BGR2RGB))
+            specific_person = transformer_arcface(specific_person_align_crop_pil)
+            specific_person = specific_person.view(-1, specific_person.shape[0], specific_person.shape[1],
+                                                   specific_person.shape[2])
+            # convert numpy to tensor
+            specific_person = specific_person.cpu()
+            # create latent id
+            specific_person_downsample = F.interpolate(specific_person, size=(112, 112))
+            specific_person_id_nonorm = model.netArc(specific_person_downsample)
+            source_specific_id_nonorm_list.append(specific_person_id_nonorm.clone())
 
-async def upload_to_folder(uploaded_file, destination_path):
-    if not allowed_file(uploaded_file.filename):
-        return {
-            "message": "Not allowed file format: only .mp4 files are allowed."
-        }
-    filename = secure_filename(uploaded_file.filename)
-    destination = Path(destination_path, filename)
-    with destination.open("wb") as buffer:
-        shutil.copyfileobj(uploaded_file.file, buffer)
-    return {"message": f"Successfully uploaded {uploaded_file.filename}"}
+    return specific_person_id_nonorm
 
+def prepare_target_persons(model, app, transformer_arcface, multisepcific_dir, crop_size):
+    # The person who provides id information (list)
+    target_id_norm_list = []
+    target_path = os.path.join(multisepcific_dir, 'DST_*')
+    target_images_path = sorted(glob.glob(target_path))
 
-def allowed_file(filename):
-    """Checks whether uploaded filename has an allowed extension."""
-    return Path(filename).suffix in ALLOWED_EXTENSIONS
+    for target_image_path in target_images_path:
+        img_a_whole = cv2.imread(target_image_path)
+        img_a_align_crop, _ = app.get(img_a_whole, crop_size)
+        img_a_align_crop_pil = Image.fromarray(cv2.cvtColor(img_a_align_crop[0], cv2.COLOR_BGR2RGB))
+        img_a = transformer_arcface(img_a_align_crop_pil)
+        img_id = img_a.view(-1, img_a.shape[0], img_a.shape[1], img_a.shape[2])
+        # convert numpy to tensor
+        img_id = img_id.cpu()
+        # create latent id
+        img_id_downsample = F.interpolate(img_id, size=(112, 112))
+        latend_id = model.netArc(img_id_downsample)
+        latend_id = F.normalize(latend_id, p=2, dim=1)
+        target_id_norm_list.append(latend_id.clone())
 
-
-@app.get("/download/{filename}")
-def download_final(filename):
-    """Downloads final video with file name filename from DOWNLOAD_FOLDER if exists"""
-    try:
-        file_path = os.path.join(DOWNLOAD_FOLDER, filename)
-        if os.path.isfile(file_path):
-            return FileResponse(
-                file_path, media_type="application/octet-stream", filename=filename
-            )
-    except Exception as e:
-        return {"message": f"There was an error downloading the file:{str(e)}"}
+    return target_id_norm_list
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8080)
+    os.chdir("SimSwap")
+    transformer = transforms.Compose([
+        transforms.ToTensor(),
+    ])
+
+    transformer_arcface = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+
+    detransformer = transforms.Compose([
+        transforms.Normalize([0, 0, 0], [1 / 0.229, 1 / 0.224, 1 / 0.225]),
+        transforms.Normalize([-0.485, -0.456, -0.406], [1, 1, 1])
+    ])
+    options = init_options('../demo/multispecific',
+                           '../demo/input.mp4',
+                           '../demo/output.mp4')
+
+    crop_size = options.crop_size
+    multisepcific_dir = options.multisepcific_dir
+
+    model = init_model(options)
+    app = init_face_detection_model(640)
+
+    source_specific_id_nonorm_list = prepare_source_persons(model, app, transformer_arcface, multisepcific_dir, crop_size)
+    target_id_norm_list = prepare_target_persons(model, app, transformer_arcface, multisepcific_dir, crop_size)
+
+    assert len(target_id_norm_list) == len(source_specific_id_nonorm_list), "The number of images in source and target  directory must be same !!!"
+    video_swap(options.video_path, target_id_norm_list, source_specific_id_nonorm_list, options.id_thres,
+               model, app, options.output_path, temp_results_dir=options.temp_path, no_simswaplogo=options.no_simswaplogo,
+               use_mask=options.use_mask)
+
+
+
