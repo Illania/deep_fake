@@ -1,8 +1,5 @@
-# ПАЧЬ: https://pastebin.com/zu1yQ5C0
-# 1. Закинуть в папку с симсвопом
-# 2. Запустить
-
-# Делает симсвоп ЦП-совместимым, а не просто эксклюзивным. Отдельную версию торча вроде как качать не нужно.
+# Patch for making SimSwap CPU-compatible.
+# Should be executed from SimSwap folder.
 
 <# :
 @echo off
