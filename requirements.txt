@@ -4,8 +4,8 @@ uvicorn~=0.21.1
 fastapi~=0.95.1
 Werkzeug~=2.2.3
 starlette~=0.26.1
-insightface==0.2.1 
-onnxruntime 
+insightface==0.2.1
+onnxruntime
 moviepy
 imageio==2.5.0
 torch~=1.12.0

@@ -126,6 +126,3 @@ if __name__ == "__main__":
     video_swap(options.video_path, target_id_norm_list, source_specific_id_nonorm_list, options.id_thres,
                model, app, options.output_path, temp_results_dir=options.temp_path, no_simswaplogo=options.no_simswaplogo,
                use_mask=options.use_mask)
-
-
-
