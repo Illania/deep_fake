@@ -9,6 +9,7 @@ from insightface_func.face_detect_crop_multi import Face_detect_crop
 from util.videoswap_multispecific import video_swap
 import os
 import glob
+from utils.hasher import Hasher, HashAlgorithm
 
 
 def init_options(multispecific_dir, video_path, output_path):
@@ -36,9 +37,9 @@ def init_model(opt):
     return model
 
 
-def init_face_detection_model(size):
+def init_face_detection_model(threshold, size):
     app = Face_detect_crop(name='antelope', root='./insightface_func/models')
-    app.prepare(ctx_id=0, det_thresh=0.6, det_size=(size, size))
+    app.prepare(ctx_id=0, det_thresh=threshold, det_size=(size, size))
     return app
 
 
@@ -50,11 +51,6 @@ def prepare_source_persons(model, app, transformer_arcface, multisepcific_dir, c
 
     with torch.no_grad():
         for source_specific_image_path in source_specific_images_path:
-            print(source_specific_image_path)
-            if os.path.isfile(source_specific_image_path):
-                print(f"file {source_specific_image_path} found")
-            else:
-                print(f"file {source_specific_image_path} not found")
             specific_person_whole = cv2.imread(source_specific_image_path)
             specific_person_align_crop, _ = app.get(specific_person_whole, crop_size)
             specific_person_align_crop_pil = Image.fromarray(
@@ -70,6 +66,7 @@ def prepare_source_persons(model, app, transformer_arcface, multisepcific_dir, c
             source_specific_id_nonorm_list.append(specific_person_id_nonorm.clone())
 
     return specific_person_id_nonorm
+
 
 def prepare_target_persons(model, app, transformer_arcface, multisepcific_dir, crop_size):
     # The person who provides id information (list)
@@ -111,21 +108,23 @@ if __name__ == "__main__":
     ])
     options = init_options('../demo/multispecific',
                            '../demo/input.mp4',
-                           '../demo/output.mp4')
+                           '../demo/output/output4.mp4')
 
     crop_size = options.crop_size
     multisepcific_dir = options.multisepcific_dir
 
     model = init_model(options)
-    app = init_face_detection_model(640)
+    app = init_face_detection_model(0.6, 640)
 
-    source_specific_id_nonorm_list = prepare_source_persons(model, app, transformer_arcface, multisepcific_dir, crop_size)
+    source_specific_id_nonorm_list = prepare_source_persons(model, app, transformer_arcface, multisepcific_dir,
+                                                            crop_size)
     target_id_norm_list = prepare_target_persons(model, app, transformer_arcface, multisepcific_dir, crop_size)
 
-    assert len(target_id_norm_list) == len(source_specific_id_nonorm_list), "The number of images in source and target  directory must be same !!!"
+    assert len(target_id_norm_list) == len(
+        source_specific_id_nonorm_list), "The number of images in source and target  directory must be same !!!"
     video_swap(options.video_path, target_id_norm_list, source_specific_id_nonorm_list, options.id_thres,
-               model, app, options.output_path, temp_results_dir=options.temp_path, no_simswaplogo=options.no_simswaplogo,
+               model, app, options.output_path, temp_results_dir=options.temp_path,
+               no_simswaplogo=options.no_simswaplogo,
                use_mask=options.use_mask)
-
-
+    Hasher.check_hash_equals(HashAlgorithm.SHA1, '../demo/output/output3.mp4', '../demo/output/output4.mp4')
 
