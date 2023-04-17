@@ -20,11 +20,6 @@ $search_replace = @{
     ".to('cuda')" = ".to(torch.device(`'cuda:0`' if torch.cuda.is_available() else `'cpu`'))";
 }
 
-if (!(Test-Path ".\SimSwap")) { Write-Host "Directory not found"; exit 1 }
-cd ".\SimSwap"
-
-Write-Host $PWD
-
 ForEach ($File in (Get-ChildItem -Path '.\*.py' -Recurse -File)) {
     $content = (Get-Content $File)
     if ($content.length -gt 0) {
