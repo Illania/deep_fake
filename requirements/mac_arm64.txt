@@ -1,0 +1,4 @@
+#specifies only arm64 specific requirements
+
+-r common_mac.txt
+image-ffmpeg

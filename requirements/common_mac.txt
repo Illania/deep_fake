@@ -1,0 +1,10 @@
+#specifies common Mac requirements
+
+torch~=1.12.0
+torchvision~=0.13.0
+torchaudio
+onnxruntime 
+moviepy
+insightface==0.2.1 
+imageio==2.5.0
+numpy~=1.21.6
