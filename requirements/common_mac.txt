@@ -1,0 +1,11 @@
+#specifies common Mac requirements
+
+opencv-python~=4.7.0.72
+torch~=1.12.0
+torchvision~=0.13.0
+torchaudio
+onnxruntime 
+moviepy
+insightface==0.2.1 
+imageio==2.5.0
+numpy~=1.21.6
