@@ -40,7 +40,7 @@
   cd SimSwap
   pwsh ../patch_cpu.ps1
 ```  
-    7. Verify that the patch has been applied correctly. Go to SimSwap/model/fs_model.py, find line 51 and check that it equals the following "device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')".
+    7. Verify that the patch has been applied correctly. Go to SimSwap/models/fs_model.py, find line 51 and check that it equals the following "device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')".
 
     8. Install onnxruntime:
 ```bash
