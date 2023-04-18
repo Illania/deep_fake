@@ -42,8 +42,8 @@
   cd SimSwap
   pwsh ../patch_cpu.ps1
 ```  
-    7. Verify that the patch has been applied correctly. Go to SimSwap/models/fs_model.py, find line 51 and check that 
-    it equals the following "device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')".
+    7. Verify that the patch has been applied correctly. Go to SimSwap/models/fs_model.py, find line 51 and 
+    check that it equals the following "device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')".
 
     8. Install onnxruntime:
 ```bash
@@ -54,7 +54,8 @@
   cd MY_REPO_PATH
   pipenv install -r requirements/mac_x86_64.txt
 ```  
-    10. Add SimSwap directory as a source root directory (change PATH_TO_SIMSWAP_FOLDER with your actual path to SimSwap folder):
+    10. Add SimSwap directory as a source root directory (change PATH_TO_SIMSWAP_FOLDER with your actual path 
+    to SimSwap folder):
 ```bash
   export PYTHONPATH="${PYTHONPATH}:/PATH_TO_SIMSWAP_FOLDER
   pipenv install -r requirements.txt
@@ -117,6 +118,7 @@
         11.3. Click on "No interpreter" in the bottom right corner of PyCharm window.
         11.4. Select "Add new interpreter" -> "Add local interpreter".
         11.5. In the "Add Python interpreter window" select "Conda environment", then "Use existing environment", 
-        then select "deepfake" from the dropdown list. It is the name of Conda environment, that you have created on step 6.
+        then select "deepfake" from the dropdown list. It is the name of Conda environment, that you have 
+        created on step 6.
         11.6. Now right-click on main.py and select "Run 'main'".
 
