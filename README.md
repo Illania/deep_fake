@@ -28,7 +28,9 @@
   brew install wget
 ```  
 
-    5. In your repo folder make init.sh script executable and run it. The shell script will clone SimSwap repository into your repository folder and will install the required models. It will require some time, please wait until script execution will be completed.
+    5. In your repo folder make init.sh script executable and run it. The shell script will clone SimSwap repository 
+    into your repository folder and will install the required models. It will require some time, please wait until 
+    script execution will be completed.
 ```bash
   chmod +x init.sh
   ./init.sh
@@ -40,7 +42,8 @@
   cd SimSwap
   pwsh ../patch_cpu.ps1
 ```  
-    7. Verify that the patch has been applied correctly. Go to SimSwap/models/fs_model.py, find line 51 and check that it equals the following "device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')".
+    7. Verify that the patch has been applied correctly. Go to SimSwap/models/fs_model.py, find line 51 and check that 
+    it equals the following "device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')".
 
     8. Install onnxruntime:
 ```bash
@@ -78,7 +81,8 @@
 ```bash
   brew install ffmpeg
 ```
-    4. Download Anaconda from https://repo.anaconda.com/archive/Anaconda3-2023.03-MacOSX-x86_64.pkg and install it by double clicking on the pkg file. Follow the installation steps.
+    4. Download Anaconda from https://repo.anaconda.com/archive/Anaconda3-2023.03-MacOSX-x86_64.pkg and install 
+    it by double clicking on the pkg file. Follow the installation steps.
 
     5. Restart the terminal window.
 
@@ -92,7 +96,8 @@
     conda install pytorch torchvision -c pytorch-nightly
     conda install -c conda-forge protobuf numpy
 ```
-    8. Add SimSwap directory as a source root directory to your conda path (change PATH_TO_SIMSWAP_FOLDER with your actual path to SimSwap folder, for example "/Users/illania/deep_fake/SimSwap"):
+    8. Add SimSwap directory as a source root directory to your conda path (change PATH_TO_SIMSWAP_FOLDER with 
+    your actual path to SimSwap folder, for example "/Users/illania/deep_fake/SimSwap"):
 ```bash
     conda develop PATH_TO_SIMSWAP_FOLDER
 ```  
@@ -111,6 +116,7 @@
         11.2. Close the window, that asks you about which interpreter you want to use.
         11.3. Click on "No interpreter" in the bottom right corner of PyCharm window.
         11.4. Select "Add new interpreter" -> "Add local interpreter".
-        11.5. In the "Add Python interpreter window" select "Conda environment", then "Use existing environment", then select "deepfake" from the dropdown list. It is the name of Conda environment, that you have created on step 6.
+        11.5. In the "Add Python interpreter window" select "Conda environment", then "Use existing environment", 
+        then select "deepfake" from the dropdown list. It is the name of Conda environment, that you have created on step 6.
         11.6. Now right-click on main.py and select "Run 'main'".
 
