@@ -22,6 +22,9 @@ jobs:
 
     - name: Install ubuntu stuff
       run: |
+        echo $(ls)
+        echo "Current dir is $PWD"
+        cd asdasdas
         sudo apt install git
         cd /home
         sudo git clone https://github.com/neuralchen/SimSwap
