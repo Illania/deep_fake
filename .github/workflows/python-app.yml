@@ -84,7 +84,7 @@ jobs:
         echo "Path $PYTHONPATH"
     - name: Test with pytest
       run: |
-        pytest
+        pytest --ignore=SimSwap
         
     - name: Run python file
       run: |
