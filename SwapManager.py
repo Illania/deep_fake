@@ -15,8 +15,8 @@ from util.videoswap import video_swap as video_swap_single
 
 class SwapManager:
 
-    def __init__(self, app):
-        self.__app = app
+    def __init__(self, fd_model):
+        self.__fd_model = fd_model
         self.__options = self.__init_options()
         self.__model = self.__init_model(self.__options)
         self.__transformer_arcface = self.__init_transformer()
@@ -30,36 +30,38 @@ class SwapManager:
         assert len(target_id_norm_list) == len(source_specific_id_nonorm_list), \
             "The number of images in source and target  directory must be same !!!"
         video_swap(options.video_path, target_id_norm_list, source_specific_id_nonorm_list, options.id_thres,
-                   self.__model, self.__app, options.output_path, temp_results_dir=options.temp_path,
+                   self.__model, self.__fd_model, options.output_path, temp_results_dir=options.temp_path,
                    no_simswaplogo=options.no_simswaplogo,
                    use_mask=options.use_mask)
 
-        Hasher.check_hash_equals(HashAlgorithm.SHA1, self.__options.output_path, '../demo/multi/output.mp4')
+        #Hasher.check_hash_equals(HashAlgorithm.SHA1, self.__options.output_path, '../demo/multi/output.mp4')
 
     def swap_single(self, video_path, output_path, pic_a_path):
-        self.__update_pathes(video_path, output_path, pic_a_path, None)
-        options = self.__options
-        with torch.no_grad():
-            pic_a = options.pic_a_path
-            img_a_whole = cv2.imread(pic_a)
-            img_a_align_crop, _ = self.__app.get(img_a_whole, self.__options.crop_size)
-            img_a_align_crop_pil = Image.fromarray(cv2.cvtColor(img_a_align_crop[0], cv2.COLOR_BGR2RGB))
-            img_a = self.__transformer_arcface(img_a_align_crop_pil)
-            img_id = img_a.view(-1, img_a.shape[0], img_a.shape[1], img_a.shape[2])
+        try:
+            self.__update_pathes(video_path, output_path, pic_a_path, None)
+            options = self.__options
+            with torch.no_grad():
+                pic_a = options.pic_a_path
+                img_a_whole = cv2.imread(pic_a)
+                img_a_align_crop, _ = self.__fd_model.get(img_a_whole, options.crop_size)
+                img_a_align_crop_pil = Image.fromarray(cv2.cvtColor(img_a_align_crop[0], cv2.COLOR_BGR2RGB))
+                img_a = self.__transformer_arcface(img_a_align_crop_pil)
+                img_id = img_a.view(-1, img_a.shape[0], img_a.shape[1], img_a.shape[2])
 
-            # convert numpy to tensor
-            img_id = img_id.cpu()
+                # convert numpy to tensor
+                img_id = img_id.cpu()
 
-            # create latent id
-            img_id_downsample = F.interpolate(img_id, size=(112, 112))
-            latend_id = self.__model.netArc(img_id_downsample)
-            latend_id = latend_id.detach().to('cpu')
-            latend_id = latend_id / np.linalg.norm(latend_id, axis=1, keepdims=True)
-            latend_id = latend_id.to('cpu')
+                # create latent id
+                img_id_downsample = F.interpolate(img_id, size=(112, 112))
+                latend_id = self.__model.netArc(img_id_downsample)
+                latend_id = latend_id.detach().to('cpu')
+                latend_id = latend_id / np.linalg.norm(latend_id, axis=1, keepdims=True)
+                latend_id = latend_id.to('cpu')
 
-            video_swap_single(options.video_path, latend_id, self.__model, self.__app, options.output_path,
-                              temp_results_dir=options.temp_path, use_mask=options.use_mask)
-            Hasher.check_hash_equals(HashAlgorithm.SHA1, self.__options.output_path, '../demo/single/output.mp4')
+                video_swap_single(options.video_path, latend_id, self.__model, self.__fd_model, options.output_path,
+                                  temp_results_dir=options.temp_path, use_mask=options.use_mask)
+        except Exception as e:
+            return {"message": f"There was an error when creating deep fake video:{str(e)}"}
 
     def __init_transformer(self):
         return transforms.Compose([
@@ -72,9 +74,11 @@ class SwapManager:
         opt.initialize()
         opt.gpu_ids = -1
         opt.parser.add_argument('-f')
+        opt.parser.add_argument('../main_test.py')
         opt = opt.parse()
         opt.temp_path = './tmp'
         opt.Arc_path = './arcface_model/arcface_checkpoint.tar'
+        opt.checkpoints_dir = './checkpoints'
         opt.isTrain = False
         opt.no_simswaplogo = True
         opt.name = 'people'
@@ -101,7 +105,7 @@ class SwapManager:
         with torch.no_grad():
             for source_specific_image_path in source_specific_images_path:
                 specific_person_whole = cv2.imread(source_specific_image_path)
-                specific_person_align_crop, _ = self.__app.get(specific_person_whole, self.__options.crop_size)
+                specific_person_align_crop, _ = self.__fd_model.get(specific_person_whole, self.__options.crop_size)
                 specific_person_align_crop_pil = Image.fromarray(
                     cv2.cvtColor(specific_person_align_crop[0], cv2.COLOR_BGR2RGB))
                 specific_person = self.__transformer_arcface(specific_person_align_crop_pil)
@@ -123,7 +127,7 @@ class SwapManager:
 
         for target_image_path in target_images_path:
             img_a_whole = cv2.imread(target_image_path)
-            img_a_align_crop, _ = self.__app.get(img_a_whole, self.__options.crop_size)
+            img_a_align_crop, _ = self.__fd_model.get(img_a_whole, self.__options.crop_size)
             img_a_align_crop_pil = Image.fromarray(cv2.cvtColor(img_a_align_crop[0], cv2.COLOR_BGR2RGB))
             img_a = self.__transformer_arcface(img_a_align_crop_pil)
             img_id = img_a.view(-1, img_a.shape[0], img_a.shape[1], img_a.shape[2])

@@ -66,7 +66,7 @@
 ```
     12. Run main.py:
 ```bash
-  python3 main.py
+  python3 main_test.py
 ```
 
 ## Mac ARM64
@@ -110,7 +110,7 @@
 
     10. Run main.py:
 ```bash
-  python main.py
+  python main_test.py
 ```
     11. Configure Anaconda in PyCharm. 
         11.1. Open your repo folder in PyCharm.
