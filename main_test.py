@@ -53,7 +53,8 @@ def test_swap_single():
     and it's hash equals to the reference video's hash."""
     test_upload_image()
     test_upload_video()
-    response = client.get("/swap_single", params={"src_video_name": "input.mp4", "dst_image_name": "dst.jpeg"})
+    response = client.get("/swap_single", params={"src_video_name": "input.mp4", "dst_image_name": "dst.jpeg",
+                                                  "test": True})
     assert response.status_code == 200
     result_file_path = f"{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}"
     Hasher.check_hash_equals(HashAlgorithm.SHA1, result_file_path, '../demo/single/output.mp4')
@@ -67,7 +68,8 @@ def test_swap_multi():
     test_upload_video(multispecific=True)
     test_upload_multispecific()
     response = client.get("/swap_multi",
-                          params={"src_video_name": "input.mp4", "multispecific_archive_name": "Archive.zip"})
+                          params={"src_video_name": "input.mp4", "multispecific_archive_name": "Archive.zip",
+                                  "test": True})
     assert response.status_code == 200
     result_file_path = f"{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}"
     Hasher.check_hash_equals(HashAlgorithm.SHA1, result_file_path, '../demo/multi/output.mp4')

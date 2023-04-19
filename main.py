@@ -58,34 +58,38 @@ async def upload_multispecific(uploaded_file: UploadFile = File(...)):
 
 
 @app.get("/swap_single")
-def swap_single(src_video_name: str = '', dst_image_name: str = ''):
+async def swap_single(src_video_name: str = '', dst_image_name: str = '', test: bool = False):
     """Swaps single face found in source video with a face from destination image,
-    and saves result video in DOWNLOADS_FOLDER.
-    Allowed image extensions: .jpg, .jpeg, .zip
-    Allowed video extensions: .mp4
+    and saves result video in DOWNLOADS_FOLDER. \n
+    <b>Allowed image extensions:</b> .jpg, .jpeg, .zip. \n
+    <b>Allowed video extensions:</b> .mp4. \n
+    <b><font color='red'>IMPORTANT: Set <i>'test'</i> parameter to <i>'true'</i> only when running tests!</font></b>
     """
     try:
+        clean_folder(DOWNLOADS_FOLDER)
         fd_model = FaceDetectAntelopeModel(0.6, 640)
-        swap_manager = SwapManager(fd_model)
+        swap_manager = SwapManager(fd_model, test)
 
         return swap_manager.swap_single(f'{VIDEOS_FOLDER}{src_video_name}',
-                                        f'{DOWNLOADS_FOLDER}/{RESULT_FILE_NAME}',
+                                        f'{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}',
                                         f'{IMAGES_FOLDER}{dst_image_name}')
     except Exception as e:
         return {"message": f"There was an error when creating deep fake video:{str(e)}"}
 
 
 @app.get("/swap_multi")
-def swap_multi(src_video_name: str = '', multispecific_archive_name: str = ''):
+async def swap_multi(src_video_name: str = '', multispecific_archive_name: str = '', test: bool = False):
     """Swaps multiple faces found in source video with DST_XX faces corresponding to SRC__XX faces
-     found in MULTISPECIFIC_FOLDER, and saves result video in DOWNLOADS_FOLDER.
-     Allowed video extensions: .mp4
-     Allowed archive extensions: .zip
-     Archive should contain SRC_XX.jpg(.jpeg/.png) and DST_XX.jpg(.jpeg/.png) image files.
+     found in MULTISPECIFIC_FOLDER, and saves result video in DOWNLOADS_FOLDER. \n
+     Archive should contain SRC_XX.jpg(.jpeg/.png) and DST_XX.jpg(.jpeg/.png) image files. \n
+     <b>Allowed video extensions:</b> .mp4. \n
+     <b>Allowed archive extensions:</b> .zip. \n
+     <b><font color='red'>IMPORTANT: Set <i>'test'</i> parameter to <i>'true'</i> only when running tests!</font></b>
      """
     try:
+        clean_folder(DOWNLOADS_FOLDER)
         fd_model = FaceDetectAntelopeModel(0.6, 640)
-        swap_manager = SwapManager(fd_model)
+        swap_manager = SwapManager(fd_model, test)
 
         with ZipFile(f'{MULTISPECIFIC_FOLDER}{multispecific_archive_name}', 'r') as archive:
             archive.extractall(path=MULTISPECIFIC_FOLDER)
@@ -101,8 +105,7 @@ def swap_multi(src_video_name: str = '', multispecific_archive_name: str = ''):
 def download_result():
     """Downloads final video with the name RESULT_FILE_NAME filename from DOWNLOAD_FOLDER if the file exists"""
     try:
-        clean_folder(DOWNLOADS_FOLDER)
-        file_path = os.path.join(DOWNLOADS_FOLDER, RESULT_FILE_NAME)
+        file_path = f"{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}"
         if os.path.isfile(file_path):
             return FileResponse(
                 file_path, media_type="application/octet-stream", filename=RESULT_FILE_NAME

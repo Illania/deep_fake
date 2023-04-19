@@ -9,14 +9,14 @@ from torchvision import transforms
 from models.models import create_model
 from options.test_options import TestOptions
 from util.videoswap_multispecific import video_swap
-from utils.hasher import Hasher, HashAlgorithm
 from util.videoswap import video_swap as video_swap_single
 
 
 class SwapManager:
 
-    def __init__(self, fd_model):
+    def __init__(self, fd_model, test=False):
         self.__fd_model = fd_model
+        self.__test = test
         self.__options = self.__init_options()
         self.__model = self.__init_model(self.__options)
         self.__transformer_arcface = self.__init_transformer()
@@ -34,7 +34,6 @@ class SwapManager:
                    no_simswaplogo=options.no_simswaplogo,
                    use_mask=options.use_mask)
 
-        #Hasher.check_hash_equals(HashAlgorithm.SHA1, self.__options.output_path, '../demo/multi/output.mp4')
 
     def swap_single(self, video_path, output_path, pic_a_path):
         try:
@@ -74,7 +73,8 @@ class SwapManager:
         opt.initialize()
         opt.gpu_ids = -1
         opt.parser.add_argument('-f')
-        opt.parser.add_argument('../main_test.py')
+        if self.__test:
+            opt.parser.add_argument('../main_test.py')
         opt = opt.parse()
         opt.temp_path = './tmp'
         opt.Arc_path = './arcface_model/arcface_checkpoint.tar'
