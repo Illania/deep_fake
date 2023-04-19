@@ -77,7 +77,7 @@ jobs:
         flake8 --exclude=SimSwap . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Check status
       run: |
-        export PYTHONPATH="${PYTHONPATH}:${PWD}"
+        export PYTHONPATH="${PYTHONPATH}:${PWD}/SimSwap"
         echo "Path $PYTHONPATH"
         echo "Current directory: $(pwd)"
         echo "Current directory: $(ls)"
