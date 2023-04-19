@@ -29,6 +29,8 @@ jobs:
         git clone https://github.com/neuralchen/SimSwap
         cd SimSwap && git pull
         echo "Current dir is $PWD"
+        export PYTHONPATH="${PYTHONPATH}:${PWD}"
+        echo "Path $PYTHONPATH"
         
         xxxxxxx
         sudo apt update
