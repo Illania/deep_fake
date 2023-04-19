@@ -28,7 +28,7 @@ jobs:
         #sudo chmod g+w .git -R
         git clone https://github.com/neuralchen/SimSwap
         cd SimSwap && git pull
-        export PYTHONPATH="${PYTHONPATH}:${PWD}"
+        export PYTHONPATH="${PWD}"
         echo "Path $PYTHONPATH"
         sudo apt update
         sudo apt install -y p7zip-full ffmpeg libsm6 libxext6 unzip
