@@ -68,6 +68,7 @@
 ```bash
   python3 main.py
 ```
+   Follow steps described in [API usage](USAGE.md).
 
 ## Mac ARM64
 
@@ -121,4 +122,6 @@
         then select "deepfake" from the dropdown list. It is the name of Conda environment, that you have 
         created on step 6.
         11.6. Now right-click on main.py and select "Run 'main'".
+        
+   Follow steps described in [API usage](USAGE.md).
 

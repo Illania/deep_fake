@@ -1,10 +1,5 @@
 import hashlib
-from enum import Enum
-
-
-class HashAlgorithm(Enum):
-    SHA1 = 0
-    SHA256 = 1
+from utils.enums import HashAlgorithm
 
 
 class Hasher:
