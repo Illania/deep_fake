@@ -25,7 +25,7 @@ jobs:
         # echo $(ls)
         # echo "Current dir is $PWD"
         sudo apt install git
-        cd /home
+        #cd /home
         sudo git clone https://github.com/neuralchen/SimSwap
         cd SimSwap && git pull
         sudo apt update
