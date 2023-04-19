@@ -22,16 +22,15 @@ jobs:
 
     - name: Install ubuntu stuff
       run: |
-        # echo $(ls)
         # echo "Current dir is $PWD"
-        echo "$USER"
-        echo "look up"
         sudo apt install git
         #cd /home
         #sudo chmod a+rwx /home/runner/work/deep_fake/deep_fake/
         #sudo chmod g+w .git -R
         git clone https://github.com/neuralchen/SimSwap
+        echo $(ls)
         cd SimSwap && git pull
+        xxxxxx
         sudo apt update
         sudo apt install -y p7zip-full ffmpeg libsm6 libxext6 unzip
         xxxxxxxxx
