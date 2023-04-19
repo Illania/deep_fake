@@ -42,7 +42,6 @@ async def upload_image(uploaded_file: UploadFile = File(...)):
         return {"message": f"There was an error uploading the file:{str(e)}"}
     finally:
         uploaded_file.file.close()
-    return {"message": f"Successfully uploaded {uploaded_file.filename}"}
 
 
 @app.post("/upload_multispecific")
