@@ -82,6 +82,8 @@ jobs:
         echo "Current directory: $(pwd)"
         echo "Current directory: $(ls)"
         echo "Path $PYTHONPATH"
+        echo "----------------------"
+        echo "SimSwap directory: $(ls SimSwap)"
     - name: Test with pytest
       run: |
         pytest --ignore=SimSwap
