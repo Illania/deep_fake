@@ -61,11 +61,12 @@ jobs:
         pip install onnxruntime
         pip install moviepy
         pip install numpy~=1.21.6
-        uvicorn==0.21.1
-        starlette==0.26.1
-        Werkzeug==2.2.3
-        fastapi==0.95.1
-        httpx
+        pip install uvicorn==0.21.1
+        pip install starlette==0.26.1
+        pip install Werkzeug==2.2.3
+        pip install fastapi==0.95.1
+        pip install python-multipart
+        pip install httpx
         
         # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
