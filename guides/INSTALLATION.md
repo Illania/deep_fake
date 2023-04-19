@@ -66,8 +66,9 @@
 ```
     12. Run main.py:
 ```bash
-  python3 main_test.py
+  python3 main.py
 ```
+    13. Follow steps described in [API usage](/guides/USAGE.md).
 
 ## Mac ARM64
 
@@ -110,7 +111,7 @@
 
     10. Run main.py:
 ```bash
-  python main_test.py
+  python main.py
 ```
     11. Configure Anaconda in PyCharm. 
         11.1. Open your repo folder in PyCharm.
@@ -121,4 +122,6 @@
         then select "deepfake" from the dropdown list. It is the name of Conda environment, that you have 
         created on step 6.
         11.6. Now right-click on main.py and select "Run 'main'".
+        
+    12. Follow steps described in [API usage](/guides/USAGE.md).
 
