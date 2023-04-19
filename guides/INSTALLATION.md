@@ -68,7 +68,7 @@
 ```bash
   python3 main.py
 ```
-    13. Follow steps described in [API usage](USAGE.md).
+   Follow steps described in [API usage](USAGE.md).
 
 ## Mac ARM64
 
@@ -123,5 +123,5 @@
         created on step 6.
         11.6. Now right-click on main.py and select "Run 'main'".
         
-    12. Follow steps described in [API usage](USAGE.md).
+   Follow steps described in [API usage](USAGE.md).
 
