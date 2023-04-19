@@ -28,13 +28,14 @@ jobs:
         echo "look up"
         sudo apt install git
         #cd /home
-        sudo chmod a+rwx /home/runner/work/deep_fake/deep_fake/
-        sudo chmod g+w .git -R
+        #sudo chmod a+rwx /home/runner/work/deep_fake/deep_fake/
+        #sudo chmod g+w .git -R
         git clone https://github.com/neuralchen/SimSwap
         cd SimSwap && git pull
         sudo apt update
         sudo apt install -y p7zip-full ffmpeg libsm6 libxext6 unzip
-
+        xxxxxxxxx
+        
         sed -i "s/if len(self.opt.gpu_ids)/if torch.cuda.is_available() and len(self.opt.gpu_ids)/g" /home/SimSwap/options/base_options.py
         sudo sed -i "s/device = torch.device('cuda:0')/torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')/g" /home/SimSwap/models/fs_model.py
         sudo sed -i "s/torch.load(netArc_checkpoint)/torch.load(netArc_checkpoint) if torch.cuda.is_available() else torch.load(netArc_checkpoint, map_location=torch.device('cpu'))/g" /home/SimSwap/models/fs_model.py
