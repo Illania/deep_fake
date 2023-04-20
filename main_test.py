@@ -1,5 +1,6 @@
 import os
 import sys
+import pytest
 
 ss_path = os.path.dirname(__file__) + '/SimSwap'
 sys.path.append(ss_path)
@@ -54,50 +55,34 @@ def test_upload_multispecific():
             )
             assert response.status_code == 200
 
+@pytest.fixture(scope="module")
 def test_swap_single():
     """Test single swap is working, result video is created,
     and it's hash equals to the reference video's hash."""
-    client = TestClient(app)  # create a test client for the FastAPI app
     test_upload_image()
     test_upload_video()
-    with client:
-        # Start the FastAPI application before sending the HTTP request
-        with client.app.app_context():
-            response = client.get("/swap_single", params={"src_video_name": "input.mp4", "dst_image_name": "dst.jpeg",
-                                                          "test": True})
-            assert response.status_code == 200
-            result_file_path = f"{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}"
-            # TODO: check that it works on different machines
-            # Hasher.check_hash_equals(HashAlgorithm.SHA1, result_file_path, '../demo/single/output.mp4')
-            if os.path.exists(result_file_path):
-                os.remove(result_file_path)
-
-# def test_swap_single():
-#     """Test single swap is working, result video is created,
-#     and it's hash equals to the reference video's hash."""
-#     test_upload_image()
-#     test_upload_video()
-#     response = client.get("/swap_single", params={"src_video_name": "input.mp4", "dst_image_name": "dst.jpeg",
-#                                                   "test": True})
-#     assert response.status_code == 200
-#     result_file_path = f"{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}"
-#     # TODO: check that it works on different machines
-#     # Hasher.check_hash_equals(HashAlgorithm.SHA1, result_file_path, '../demo/single/output.mp4')
-#     if os.path.exists(result_file_path):
-#         os.remove(result_file_path)
+    response = client.get("/swap_single", params={"src_video_name": "input.mp4", "dst_image_name": "dst.jpeg",
+                                                  "test": True})
+    assert response.status_code == 200
+    result_file_path = f"{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}"
+    # TODO: check that it works on different machines
+    # Hasher.check_hash_equals(HashAlgorithm.SHA1, result_file_path, '../demo/single/output.mp4')
+    if os.path.exists(result_file_path):
+        os.remove(result_file_path)
 
 
-# def test_swap_multi():
-#     """Test multi swap is working, result video is created,
-#        and it's hash equals to the reference video's hash."""
-#     test_upload_video(multispecific=True)
-#     test_upload_multispecific()
-#     response = client.get("/swap_multi",
-#                           params={"src_video_name": "input.mp4", "multispecific_archive_name": "Archive.zip",
-#                                   "test": True})
-#     assert response.status_code == 200
-#     result_file_path = f"{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}"
-#     # TODO: check that it works on different machines
-#     # Hasher.check_hash_equals(HashAlgorithm.SHA1, result_file_path, '../demo/multi/output.mp4')
-#     if os.path.exists(result_file_path):
-#         os.remove(result_file_path)
+@pytest.fixture(scope="module")
+def test_swap_multi():
+    """Test multi swap is working, result video is created,
+       and it's hash equals to the reference video's hash."""
+    test_upload_video(multispecific=True)
+    test_upload_multispecific()
+    response = client.get("/swap_multi",
+                          params={"src_video_name": "input.mp4", "multispecific_archive_name": "Archive.zip",
+                                  "test": True})
+    assert response.status_code == 200
+    result_file_path = f"{DOWNLOADS_FOLDER}{RESULT_FILE_NAME}"
+    # TODO: check that it works on different machines
+    # Hasher.check_hash_equals(HashAlgorithm.SHA1, result_file_path, '../demo/multi/output.mp4')
+    if os.path.exists(result_file_path):
+        os.remove(result_file_path)
