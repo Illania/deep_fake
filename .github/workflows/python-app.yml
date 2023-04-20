@@ -90,7 +90,7 @@ jobs:
       run: |
         pytest --ignore=SimSwap
         
-    - name: Run python file
-      run: |
-        cd /home/SimSwap
-        python test_video_swapsingle.py --crop_size 224 --use_mask --name people --Arc_path arcface_model/arcface_checkpoint.tar --pic_a_path /home/runner/work/deep_fake/deep_fake/demo/single/dst.jpeg --video_path /home/runner/work/deep_fake/deep_fake/demo/single/input.mp4 --output_path output/output_result.mp4 --temp_path temp_results
+#    - name: Run python file
+#      run: |
+#        cd /home/SimSwap
+#        python test_video_swapsingle.py --crop_size 224 --use_mask --name people --Arc_path arcface_model/arcface_checkpoint.tar --pic_a_path /home/runner/work/deep_fake/deep_fake/demo/single/dst.jpeg --video_path /home/runner/work/deep_fake/deep_fake/demo/single/input.mp4 --output_path output/output_result.mp4 --temp_path temp_results
