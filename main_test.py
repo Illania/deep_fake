@@ -3,6 +3,7 @@ import sys
 
 ss_path = os.path.dirname(__file__) + '/SimSwap'
 sys.path.append(ss_path)
+sys.path.append('/home/runner/work/deep_fake/deep_fake/SimSwap')
 
 from fastapi.testclient import TestClient
 from main import app
