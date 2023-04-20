@@ -1,10 +1,10 @@
 # **Deep Fake Evolution**
 
-Deep Fake Evolution is an application that swaps faces on a video from a given photo/photoes. It uses SimSwap framework for high fidelity face swapping.
+Deep Fake Evolution is an application can realize arbitrary face swapping on images and videos with one single trained model.
 
 ## Samples
 
-![](//Users/lusen/Desktop/m_merged (1).png)
+<image src="/Users/lusen/Desktop/m_merged (1).jpg" alt="Sample">
 
 ## Team:
 
