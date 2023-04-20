@@ -1,9 +1,12 @@
-# <span style="color: #00FF00 ;">Deep Fake Evolution</span>`
+# **Deep Fake Evolution**
 
 Deep Fake Evolution is an application that swaps faces on a video from a given photo/photoes. It uses SimSwap framework for high fidelity face swapping.
-____________________________________________________________________________________________
 
-## <font color="blue">Team:</font>
+## Samples
+
+![](//Users/lusen/Desktop/m_merged (1).png)
+
+## Team:
 
 - Anna Gulich 
 - Sergey Shvets 
