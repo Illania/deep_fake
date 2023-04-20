@@ -55,6 +55,7 @@ def test_upload_multispecific():
             )
             assert response.status_code == 200
 
+@pytest.fixture(scope="module")
 def test_swap_single():
     """Test single swap is working, result video is created,
     and it's hash equals to the reference video's hash."""
@@ -70,6 +71,7 @@ def test_swap_single():
         os.remove(result_file_path)
 
 
+@pytest.fixture(scope="module")
 def test_swap_multi():
     """Test multi swap is working, result video is created,
        and it's hash equals to the reference video's hash."""

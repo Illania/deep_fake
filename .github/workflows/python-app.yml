@@ -23,9 +23,6 @@ jobs:
     - name: Install ubuntu stuff
       run: |
         sudo apt install git
-        #cd /home
-        #sudo chmod a+rwx /home/runner/work/deep_fake/deep_fake/
-        #sudo chmod g+w .git -R
         git clone https://github.com/neuralchen/SimSwap
         cd SimSwap && git pull
         sudo apt update
@@ -84,7 +81,7 @@ jobs:
         flake8 --exclude=SimSwap . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Check status
       run: |
-        echo "Path $PYTHONPATH"
+        echo "PYTHONPATH: $PYTHONPATH"
         echo "Current directory: $(pwd)"
     - name: Test with pytest
       run: |
