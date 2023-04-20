@@ -48,7 +48,7 @@ jobs:
       with:
         path: |
           ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/git_actions_ubuntu.txt') }}
 
     - name: Set up Python 3.9
       uses: actions/setup-python@v3
@@ -57,21 +57,25 @@ jobs:
 
     - name: Install dependencies
       run: |
+        
         pip install --upgrade pip
-        pip install flake8 pytest
-        pip install torch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0
-        pip install --ignore-installed imageio
-        pip install insightface==0.2.1
-        pip install onnxruntime
-        pip install moviepy
-        pip install numpy~=1.21.6
-        pip install uvicorn==0.21.1
-        pip install starlette==0.26.1
-        pip install Werkzeug==2.2.3
-        pip install fastapi==0.95.1
-        pip install python-multipart
-        pip install httpx
-        pip install pytest
+        pip install -r requirements/git_actions_ubuntu.txt
+        
+        #pip install --upgrade pip
+        #pip install flake8
+        #pip install torch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0
+        #pip install --ignore-installed imageio
+        #pip install insightface==0.2.1
+        #pip install onnxruntime
+        #pip install moviepy
+        #pip install numpy~=1.21.6
+        #pip install uvicorn==0.21.1
+        #pip install starlette==0.26.1
+        #pip install Werkzeug==2.2.3
+        #pip install fastapi==0.95.1
+        #pip install python-multipart
+        #pip install httpx
+        #pip install pytest
         
     - name: Lint with flake8
       run: |
