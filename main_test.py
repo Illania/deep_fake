@@ -1,4 +1,9 @@
 import os
+import sys
+
+ss_path = os.path.dirname(__file__) + '/SimSwap'
+sys.path.append(ss_path)
+
 from fastapi.testclient import TestClient
 from main import app
 from utils.api_constants import DOWNLOADS_FOLDER, RESULT_FILE_NAME, VIDEOS_FOLDER, IMAGES_FOLDER
