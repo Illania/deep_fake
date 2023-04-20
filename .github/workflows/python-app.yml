@@ -69,7 +69,6 @@ jobs:
         pip install httpx
         pip install pytest
         
-        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -78,14 +77,14 @@ jobs:
         flake8 --exclude=SimSwap . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Check status
       run: |
-        export PYTHONPATH="${PWD}/SimSwap"
+#        export PYTHONPATH="${PWD}/SimSwap"
         echo "Path $PYTHONPATH"
         echo "Current directory: $(pwd)"
-        echo "Current directory: $(ls)"
-        echo "Path $PYTHONPATH"
-        echo "----------------------"
-        echo "SimSwap directory: $(ls SimSwap)"
-        python -m site
+#        echo "Current directory: $(ls)"
+#        echo "Path $PYTHONPATH"
+#        echo "----------------------"
+#        echo "SimSwap directory: $(ls SimSwap)"
+#        python -m site
     - name: Test with pytest
       run: |
         pytest --ignore=SimSwap
