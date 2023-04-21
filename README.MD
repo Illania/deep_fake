@@ -1,4 +1,4 @@
-# <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=500&color=1D46F7&width=435&lines=Deep Fake Evolution" alt="Typing SVG" /></a><br>
+# <a href=" https://git.io/typing-svg "> <img src=" https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=500&color=1D46F7&width=435&lines= Deep Fake Evolution" alt="Typing SVG" /></a>
 
 Deep Fake Evolution is an application can realize arbitrary face swapping on images and videos with one single trained model.
 
@@ -29,38 +29,38 @@ It that allows you to perform face-swapping on images and videos using a single 
 
 The application consists:
 
-.
-├── FaceDetectAntelopeModel.py
+. ├── FaceDetectAntelopeModel.py
 ├── LICENSE
 ├── README.MD
 ├── SwapManager.py
-├── __init__.py
+├── init.py
 ├── demo
-│   ├── multi
-│   └── single
+│ ├── multi
+│ └── single
 ├── downloads
 ├── guides
-│   ├── INSTALLATION.md
-│   └── USAGE.md
+│ ├── INSTALLATION.md
+│ └── USAGE.md
 ├── init.sh
 ├── main.py
 ├── main_test.py
 ├── patch_cpu.ps1
 ├── requirements
-│   ├── common_mac.txt
-│   ├── git_actions_ubuntu.txt
-│   ├── mac_arm64.txt
-│   └── mac_x86_64.txt
+│ ├── common_mac.txt
+│ ├── git_actions_ubuntu.txt
+│ ├── mac_arm64.txt
+│ └── mac_x86_64.txt
 ├── uploads
-│   ├── images
-│   ├── multispecific
-│   └── videos
-└── utils
-    ├── __init__.py
-    ├── api_constants.py
-    ├── api_utils.py
-    ├── enums.py
-    └── hasher.py
+│ ├── images
+│ ├── multispecific
+│ └── videos
+└── utilities
+├── init.py
+├── api_constants.py
+├── api_utils.py
+├── enums.py
+└── hasher.py
+
 
 
 ## [Installation on CPU](/guides/INSTALLATION.md)
