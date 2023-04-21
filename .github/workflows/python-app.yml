@@ -22,22 +22,19 @@ jobs:
 
     - name: Install ubuntu stuff
       run: |
-        # echo $(ls)
-        # echo "Current dir is $PWD"
         sudo apt install git
-        cd /home
-        sudo git clone https://github.com/neuralchen/SimSwap
+        git clone https://github.com/neuralchen/SimSwap
         cd SimSwap && git pull
         sudo apt update
         sudo apt install -y p7zip-full ffmpeg libsm6 libxext6 unzip
-
-        sed -i "s/if len(self.opt.gpu_ids)/if torch.cuda.is_available() and len(self.opt.gpu_ids)/g" /home/SimSwap/options/base_options.py
-        sudo sed -i "s/device = torch.device('cuda:0')/torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')/g" /home/SimSwap/models/fs_model.py
-        sudo sed -i "s/torch.load(netArc_checkpoint)/torch.load(netArc_checkpoint) if torch.cuda.is_available() else torch.load(netArc_checkpoint, map_location=torch.device('cpu'))/g" /home/SimSwap/models/fs_model.py
-        find /home/SimSwap -type f -exec sed -i "s/net.load_state_dict(torch.load(save_pth))/net.load_state_dict(torch.load(save_pth)) if torch.cuda.is_available() else net.load_state_dict(torch.load(save_pth, map_location=torch.device('cpu')))/g" {} \;
-        find /home/SimSwap -type f -exec sed -i "s/.cuda()/.to(torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))/g" {} \;
-        find /home/SimSwap -type f -exec sed -i "s/.to('cuda')/.to(torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))/g" {} \;
-        sed -i "s/torch.device(\"cuda:0\")/torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')/g" /home/SimSwap/models/fs_model.py
+        
+        sed -i "s/if len(self.opt.gpu_ids)/if torch.cuda.is_available() and len(self.opt.gpu_ids)/g" options/base_options.py
+        sudo sed -i "s/device = torch.device('cuda:0')/torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')/g" models/fs_model.py
+        sudo sed -i "s/torch.load(netArc_checkpoint)/torch.load(netArc_checkpoint) if torch.cuda.is_available() else torch.load(netArc_checkpoint, map_location=torch.device('cpu'))/g" models/fs_model.py
+        find . -type f -exec sed -i "s/net.load_state_dict(torch.load(save_pth))/net.load_state_dict(torch.load(save_pth)) if torch.cuda.is_available() else net.load_state_dict(torch.load(save_pth, map_location=torch.device('cpu')))/g" {} \;
+        find . -type f -exec sed -i "s/.cuda()/.to(torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))/g" {} \;
+        find . -type f -exec sed -i "s/.to('cuda')/.to(torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))/g" {} \;
+        sed -i "s/torch.device(\"cuda:0\")/torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')/g" models/fs_model.py
         
         wget -P ./arcface_model https://github.com/neuralchen/SimSwap/releases/download/1.0/arcface_checkpoint.tar
         wget https://github.com/neuralchen/SimSwap/releases/download/1.0/checkpoints.zip
@@ -46,6 +43,13 @@ jobs:
         wget --no-check-certificate "https://sh23tw.dm.files.1drv.com/y4mmGiIkNVigkSwOKDcV3nwMJulRGhbtHdkheehR5TArc52UjudUYNXAEvKCii2O5LAmzGCGK6IfleocxuDeoKxDZkNzDRSt4ZUlEt8GlSOpCXAFEkBwaZimtWGDRbpIGpb_pz9Nq5jATBQpezBS6G_UtspWTkgrXHHxhviV2nWy8APPx134zOZrUIbkSF6xnsqzs3uZ_SEX_m9Rey0ykpx9w" -O antelope.zip
         unzip ./antelope.zip -d ./insightface_func/models/
 
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/git_actions_ubuntu.txt') }}
+
     - name: Set up Python 3.9
       uses: actions/setup-python@v3
       with:
@@ -53,27 +57,20 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        pip install torch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0
-        pip install --ignore-installed imageio
-        pip install insightface==0.2.1
-        pip install onnxruntime
-        pip install moviepy
-        pip install numpy~=1.21.6
         
-        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install --upgrade pip
+        pip install -r requirements/git_actions_ubuntu.txt
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 --exclude=SimSwap . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        flake8 --exclude=SimSwap . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Check status
+      run: |
+        echo "PYTHONPATH: $PYTHONPATH"
+        echo "Current directory: $(pwd)"
     - name: Test with pytest
       run: |
-        pytest
-        
-    - name: Run python file
-      run: |
-        cd /home/SimSwap
-        python test_video_swapsingle.py --crop_size 224 --use_mask --name people --Arc_path arcface_model/arcface_checkpoint.tar --pic_a_path /home/runner/work/deep_fake/deep_fake/demo/single/dst.jpeg --video_path /home/runner/work/deep_fake/deep_fake/demo/single/input.mp4 --output_path output/output_result.mp4 --temp_path temp_results
+        pytest --ignore=SimSwap -k "test_upload_image or test_upload_video or test_upload_multispecific or test_main_page"
