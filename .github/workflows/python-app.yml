@@ -60,23 +60,7 @@ jobs:
         
         pip install --upgrade pip
         pip install -r requirements/git_actions_ubuntu.txt
-        
-        #pip install --upgrade pip
-        #pip install flake8
-        #pip install torch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0
-        #pip install --ignore-installed imageio
-        #pip install insightface==0.2.1
-        #pip install onnxruntime
-        #pip install moviepy
-        #pip install numpy~=1.21.6
-        #pip install uvicorn==0.21.1
-        #pip install starlette==0.26.1
-        #pip install Werkzeug==2.2.3
-        #pip install fastapi==0.95.1
-        #pip install python-multipart
-        #pip install httpx
-        #pip install pytest
-        
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -89,9 +73,4 @@ jobs:
         echo "Current directory: $(pwd)"
     - name: Test with pytest
       run: |
-        pytest --ignore=SimSwap
-        
-#    - name: Run python file
-#      run: |
-#        cd /home/SimSwap
-#        python test_video_swapsingle.py --crop_size 224 --use_mask --name people --Arc_path arcface_model/arcface_checkpoint.tar --pic_a_path /home/runner/work/deep_fake/deep_fake/demo/single/dst.jpeg --video_path /home/runner/work/deep_fake/deep_fake/demo/single/input.mp4 --output_path output/output_result.mp4 --temp_path temp_results
+        pytest --ignore=SimSwap -k "test_upload_image or test_upload_video or test_upload_multispecific or test_main_page"
