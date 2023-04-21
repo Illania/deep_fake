@@ -60,7 +60,3 @@ The application consists:
 ├── api_utils.py<br>
 ├── enums.py<br>
 └── hasher.py</p>
-
-## [Installation on CPU](/guides/INSTALLATION.md)
-
-## [API usage](/guides/USAGE.md)
