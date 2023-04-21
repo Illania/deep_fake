@@ -4,7 +4,7 @@ Deep Fake Evolution is an application can realize arbitrary face swapping on ima
 
 ## Samples
 
-<image src="/Users/lusen/Desktop/m_merged (1).jpg" alt="Sample">
+<image src="/Users/lusen/Desktop/m_merged (1).jpg">
 
 ## Team:
 
