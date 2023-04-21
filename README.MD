@@ -2,30 +2,30 @@
 
 Deep Fake Evolution is an application can realize arbitrary face swapping on images and videos with one single trained model.
 
-It that allows you to perform face-swapping on images and videos using a single and efficient trained model. 
-## Examples of using
+That allows you to perform face-swapping on images and videos using a single and efficient trained model. 
+### Examples of using
 
 ![_](./guides/images/sample2.png)
 ![_](./guides/images/sample1.png)
 
-## Team:
+### Team:
 
 - Anna Gulich 
 - Sergey Shvets 
 - Alexey Naymushin 
 - Liudmila Mihaylichenko 
 
-## Key Features
+### Key Features
 
 1. Arbitrary facial expressions, pose, and weather conditions to simulate human movement
 2. High-quality output video for professional use
 3. Easy-to-use interface for users
 
-## [Installation on CPU](/guides/INSTALLATION.md)
+### [Installation on CPU](/guides/INSTALLATION.md)
 
-## [API usage](/guides/USAGE.md)
+### [API usage](/guides/USAGE.md)
 
-## Structure Description:
+### Structure Description:
 
 The application consists:
 <p>
