@@ -10,7 +10,7 @@ sys.path.append('/home/runner/work/deep_fake/deep_fake/SimSwap')
 from fastapi.testclient import TestClient
 from main import app
 from utils.api_constants import DOWNLOADS_FOLDER, RESULT_FILE_NAME, VIDEOS_FOLDER, IMAGES_FOLDER
-from utils.enums import HashAlgorithm
+from utils.enums import HashAlgorithm, SourceType
 from utils.hasher import Hasher
 from utils.api_utils import allowed_file
 
