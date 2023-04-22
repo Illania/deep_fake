@@ -27,7 +27,6 @@ That allows you to perform face-swapping on videos using a single and efficient 
 
 ### Project structure description:
 
-The application consists:
 <pre>
 ├── FaceDetectAntelopeModel.py              - Face detection model class
 ├── LICENSE                                 - License file
