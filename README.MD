@@ -3,7 +3,7 @@
 Deep Fake Evolution is an API that can perform arbitrary face swapping on videos using one single trained model.
 
 That allows you to perform face-swapping on videos using a single and efficient trained model. 
-### Examples of using
+### Examples of usage:
 
 ![_](./guides/images/sample2.png)
 ![_](./guides/images/sample1.png)
