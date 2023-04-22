@@ -96,6 +96,6 @@ def test_allowed_file():
    assert allowed_file("test.mp4", SourceType.VIDEO) == True
    assert allowed_file("test.MP4", SourceType.VIDEO) == True
    assert allowed_file("test.zip", SourceType.ARCHIVE) == True
-   assert allowed_file("test.ZIP", SourceType.VIDEO) == True
+   assert allowed_file("test.ZIP", SourceType.ARCHIVE) == True
 
 
