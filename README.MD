@@ -15,7 +15,7 @@ That allows you to perform face-swapping on videos using a single and efficient 
 - Alexey Naymushin 
 - Liudmila Mihaylichenko 
 
-### Key Features:
+### Key features:
 
 1. Arbitrary single-face and multi-face swapping using modern, fast and efficient <a href="https://github.com/neuralchen/SimSwap" target="_blank">SimSwap Framework</a>
 2. High-quality output video for professional use
@@ -25,7 +25,7 @@ That allows you to perform face-swapping on videos using a single and efficient 
 
 ### [API usage](/guides/USAGE.md)
 
-### Structure Description:
+### Project structure description:
 
 The application consists:
 <pre>
