@@ -8,7 +8,7 @@ from utils.enums import SourceType
 
 
 async def upload_to_folder(uploaded_file, source_type, destination_path):
-    if not __allowed_file(uploaded_file.filename, source_type):
+    if not allowed_file(uploaded_file.filename, source_type):
         return {
             "message": "Not allowed file format."
         }
@@ -29,11 +29,12 @@ def clean_folder(folder_path):
         return {"message": f"There was an error when cleaning the folder:{str(e)}"}
 
 
-def __allowed_file(filename, source_type):
+def allowed_file(filename, source_type):
     """Checks whether uploaded file has an allowed extension."""
-    suffix = Path(filename).suffix
+    suffix = Path(filename).suffix.lower()
     allowed_extensions = ALLOWED_IMAGE_EXTENSIONS if source_type == SourceType.IMAGE else (
         ALLOWED_VIDEO_EXTENSIONS if source_type == SourceType.VIDEO else ALLOWED_ARCHIVE_EXTENSIONS)
+    
     return suffix in allowed_extensions
 
 
