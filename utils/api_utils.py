@@ -35,7 +35,7 @@ def __allowed_file(filename, source_type):
     allowed_extensions = ALLOWED_IMAGE_EXTENSIONS if source_type == SourceType.IMAGE else (
         ALLOWED_VIDEO_EXTENSIONS if source_type == SourceType.VIDEO else ALLOWED_ARCHIVE_EXTENSIONS)
     
-    return suffix in [x.lower() for x in allowed_extensions]
+    return suffix in allowed_extensions
 
 
 
