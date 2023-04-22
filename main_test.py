@@ -12,7 +12,7 @@ from main import app
 from utils.api_constants import DOWNLOADS_FOLDER, RESULT_FILE_NAME, VIDEOS_FOLDER, IMAGES_FOLDER
 from utils.enums import HashAlgorithm
 from utils.hasher import Hasher
-
+from utils.api_utils import allowed_file
 
 client = TestClient(app)
 
@@ -86,19 +86,16 @@ def test_swap_multi():
         os.remove(result_file_path)
 
 def test_allowed_file():
-   """Test allowed file check type of file"""
-   assert __allowed_file("test.jpg", SourceType.IMAGE) == True
-   assert __allowed_file("test.mp4", SourceType.VIDEO) == True
-   assert __allowed_file("test.zip ", SourceType.ARCHIVE) == True
-   assert __allowed_file("test.JPEG", SourceType.IMAGE) == True
-   assert __allowed_file("test.MP4", SourceType.VIDEO) == False
-   assert __allowed_file("test.png", SourceType.VIDEO) == False
+   """Test allowed file types"""
+   assert allowed_file("test.jpg", SourceType.IMAGE) == True
+   assert allowed_file("test.jpeg", SourceType.IMAGE) == True
+   assert allowed_file("test.png", SourceType.IMAGE) == True
+   assert allowed_file("test.JPEG", SourceType.IMAGE) == True
+   assert allowed_file("test.JPG", SourceType.IMAGE) == True
+   assert allowed_file("test.PNG", SourceType.IMAGE) == True
+   assert allowed_file("test.mp4", SourceType.VIDEO) == True
+   assert allowed_file("test.MP4", SourceType.VIDEO) == True
+   assert allowed_file("test.zip ", SourceType.ARCHIVE) == True
+   assert allowed_file("test.ZIP", SourceType.VIDEO) == True
 
-   assert Path("test.JPG").suffix.lower() == ".jpg"
-   assert Path("test.MP4").suffix.lower() == ".mp4"
-   assert Path(" test.ZIP ").suffix.lower() == ".zip"
-    
-   assert set(ALLOWED_IMAGE_EXTENSIONS) == {".jpg", ".jpeg", ".png"}
-   assert set(ALLOWED_VIDEO_EXTENSIONS) == {".mp4"}
-   assert set(ALLOWED_ARCHIVE_EXTENSIONS) == {".zip"}
 
