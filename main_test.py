@@ -84,3 +84,21 @@ def test_swap_multi():
     # Hasher.check_hash_equals(HashAlgorithm.SHA1, result_file_path, '../demo/multi/output.mp4')
     if os.path.exists(result_file_path):
         os.remove(result_file_path)
+
+def test_allowed_file():
+   """Test allowed file check type of file"""
+   assert __allowed_file("test.jpg", SourceType.IMAGE) == True
+   assert __allowed_file("test.mp4", SourceType.VIDEO) == True
+   assert __allowed_file("test.zip ", SourceType.ARCHIVE) == True
+   assert __allowed_file("test.JPEG", SourceType.IMAGE) == True
+   assert __allowed_file("test.MP4", SourceType.VIDEO) == False
+   assert __allowed_file("test.png", SourceType.VIDEO) == False
+
+   assert Path("test.JPG").suffix.lower() == ".jpg"
+   assert Path("test.MP4").suffix.lower() == ".mp4"
+   assert Path(" test.ZIP ").suffix.lower() == ".zip"
+    
+   assert set(ALLOWED_IMAGE_EXTENSIONS) == {".jpg", ".jpeg", ".png"}
+   assert set(ALLOWED_VIDEO_EXTENSIONS) == {".mp4"}
+   assert set(ALLOWED_ARCHIVE_EXTENSIONS) == {".zip"}
+
