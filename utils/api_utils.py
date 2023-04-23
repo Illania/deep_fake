@@ -3,7 +3,11 @@ import os
 import shutil
 from pathlib import Path
 from werkzeug.utils import secure_filename
-from utils.api_constants import ALLOWED_IMAGE_EXTENSIONS, ALLOWED_VIDEO_EXTENSIONS, ALLOWED_ARCHIVE_EXTENSIONS
+from utils.api_constants import (
+    ALLOWED_IMAGE_EXTENSIONS,
+    ALLOWED_VIDEO_EXTENSIONS,
+    ALLOWED_ARCHIVE_EXTENSIONS
+)
 from utils.enums import SourceType
 
 
@@ -26,16 +30,19 @@ def clean_folder(folder_path):
         for f in files:
             os.remove(f)
     except Exception as e:
-        return {"message": f"There was an error when cleaning the folder:{str(e)}"}
+        return {
+            "message":
+                f"There was an error when cleaning the folder: {str(e)}"
+        }
 
 
 def allowed_file(filename, source_type):
     """Checks whether uploaded file has an allowed extension."""
     suffix = Path(filename).suffix.lower()
-    allowed_extensions = ALLOWED_IMAGE_EXTENSIONS if source_type == SourceType.IMAGE else (
-        ALLOWED_VIDEO_EXTENSIONS if source_type == SourceType.VIDEO else ALLOWED_ARCHIVE_EXTENSIONS)
-    
+    allowed_extensions = ALLOWED_IMAGE_EXTENSIONS \
+        if source_type == SourceType.IMAGE \
+        else (
+            ALLOWED_VIDEO_EXTENSIONS if source_type == SourceType.VIDEO
+            else ALLOWED_ARCHIVE_EXTENSIONS)
+
     return suffix in allowed_extensions
-
-
-
