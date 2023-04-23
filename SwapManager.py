@@ -34,7 +34,6 @@ class SwapManager:
                    no_simswaplogo=options.no_simswaplogo,
                    use_mask=options.use_mask)
 
-
     def swap_single(self, video_path, output_path, pic_a_path):
         try:
             self.__update_pathes(video_path, output_path, pic_a_path, None)

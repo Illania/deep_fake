@@ -1,6 +1,5 @@
 import os
 import sys
-import pytest
 
 ss_path = os.path.dirname(__file__) + '/SimSwap'
 sys.path.append(ss_path)
@@ -9,9 +8,8 @@ sys.path.append('/home/runner/work/deep_fake/deep_fake/SimSwap')
 
 from fastapi.testclient import TestClient
 from main import app
-from utils.api_constants import DOWNLOADS_FOLDER, RESULT_FILE_NAME, VIDEOS_FOLDER, IMAGES_FOLDER
-from utils.enums import HashAlgorithm, SourceType
-from utils.hasher import Hasher
+from utils.api_constants import DOWNLOADS_FOLDER, RESULT_FILE_NAME
+from utils.enums import SourceType
 from utils.api_utils import allowed_file
 
 client = TestClient(app)
@@ -55,6 +53,7 @@ def test_upload_multispecific():
             )
             assert response.status_code == 200
 
+
 def test_swap_single():
     """Test single swap is working, result video is created,
     and it's hash equals to the reference video's hash."""
@@ -85,17 +84,16 @@ def test_swap_multi():
     if os.path.exists(result_file_path):
         os.remove(result_file_path)
 
+
 def test_allowed_file():
-   """Test allowed file types"""
-   assert allowed_file("test.jpg", SourceType.IMAGE) == True
-   assert allowed_file("test.jpeg", SourceType.IMAGE) == True
-   assert allowed_file("test.png", SourceType.IMAGE) == True
-   assert allowed_file("test.JPEG", SourceType.IMAGE) == True
-   assert allowed_file("test.JPG", SourceType.IMAGE) == True
-   assert allowed_file("test.PNG", SourceType.IMAGE) == True
-   assert allowed_file("test.mp4", SourceType.VIDEO) == True
-   assert allowed_file("test.MP4", SourceType.VIDEO) == True
-   assert allowed_file("test.zip", SourceType.ARCHIVE) == True
-   assert allowed_file("test.ZIP", SourceType.ARCHIVE) == True
-
-
+    """Test allowed file types"""
+    assert allowed_file("test.jpg", SourceType.IMAGE) is True
+    assert allowed_file("test.jpeg", SourceType.IMAGE) is True
+    assert allowed_file("test.png", SourceType.IMAGE) is True
+    assert allowed_file("test.JPEG", SourceType.IMAGE) is True
+    assert allowed_file("test.JPG", SourceType.IMAGE) is True
+    assert allowed_file("test.PNG", SourceType.IMAGE) is True
+    assert allowed_file("test.mp4", SourceType.VIDEO) is True
+    assert allowed_file("test.MP4", SourceType.VIDEO) is True
+    assert allowed_file("test.zip", SourceType.ARCHIVE) is True
+    assert allowed_file("test.ZIP", SourceType.ARCHIVE) is True
