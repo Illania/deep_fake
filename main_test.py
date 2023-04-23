@@ -87,15 +87,15 @@ def test_swap_multi():
 
 def test_allowed_file():
    """Test allowed file types"""
-   assert allowed_file("test.jpg", SourceType.IMAGE) == True
-   assert allowed_file("test.jpeg", SourceType.IMAGE) == True
-   assert allowed_file("test.png", SourceType.IMAGE) == True
-   assert allowed_file("test.JPEG", SourceType.IMAGE) == True
-   assert allowed_file("test.JPG", SourceType.IMAGE) == True
-   assert allowed_file("test.PNG", SourceType.IMAGE) == True
-   assert allowed_file("test.mp4", SourceType.VIDEO) == True
-   assert allowed_file("test.MP4", SourceType.VIDEO) == True
-   assert allowed_file("test.zip ", SourceType.ARCHIVE) == True
-   assert allowed_file("test.ZIP", SourceType.VIDEO) == True
+   assert allowed_file("test.jpg", SourceType.IMAGE) is True
+   assert allowed_file("test.jpeg", SourceType.IMAGE) is True
+   assert allowed_file("test.png", SourceType.IMAGE) is True
+   assert allowed_file("test.JPEG", SourceType.IMAGE) is True
+   assert allowed_file("test.JPG", SourceType.IMAGE) is True
+   assert allowed_file("test.PNG", SourceType.IMAGE) is True
+   assert allowed_file("test.mp4", SourceType.VIDEO) is True
+   assert allowed_file("test.MP4", SourceType.VIDEO) is True
+   assert allowed_file("test.zip ", SourceType.ARCHIVE) is True
+   assert allowed_file("test.ZIP", SourceType.VIDEO) is True
 
 
