@@ -1,4 +1,5 @@
 import os
+import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from starlette.responses import RedirectResponse, FileResponse
 from FaceDetectAntelopeModel import FaceDetectAntelopeModel
