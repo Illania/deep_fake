@@ -11,7 +11,7 @@ RUN apt update
 RUN apt install -y git megatools p7zip-full ffmpeg libsm6 libxext6 unzip mc
 
 #  Создаем виртуальное окружение python
-RUN	conda create -n deepfake python=3.9 && source ~/.bashrc && conda activate deepfake
+RUN	conda create -n deepfake python=3.7 && source ~/.bashrc && conda activate deepfake
 
 # Устанавливаем пакеты python
 RUN python -m pip install --upgrade pip
@@ -28,7 +28,9 @@ RUN pip install Pillow~=9.5.0
 RUN pip install numpy~=1.21.6
 RUN pip install uvicorn
 RUN pip install python-multipart
-RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+RUN pip install torch~=1.12.0
+RUN pip install torchvision~=0.13.0
+RUN pip install torchaudio --no-deps
 
 # Клонируем репозитории
 RUN git clone https://github.com/Illania/deep_fake.git .
@@ -63,4 +65,4 @@ RUN unzip ./antelope.zip -d ./SimSwap/insightface_func/models/
 ENV PYTHONPATH="${PYTHONPATH}:/app/SimSwap"
 
 # Задаем порт и запускаем сервер
-EXPOSE 8000
+EXPOSE 8080
