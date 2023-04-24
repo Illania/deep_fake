@@ -166,6 +166,6 @@ def download_result():
                 f"There was an error downloading {RESULT_FILE_NAME}: {str(e)}"
         }
 
-    
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8080)
